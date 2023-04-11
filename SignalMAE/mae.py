@@ -71,6 +71,14 @@ class MaskedAutoencoderSignal(nn.Module):
         self.decoder_norm = norm_layer(decoder_embed_dim)
         self.decoder_pred = nn.Linear(decoder_embed_dim, patch_size[0] * patch_size[1] * in_chans,
                                       bias=True)  # decoder to patch
+
+        self.decoder_classification = nn.Linear(decoder_embed_dim, patch_size[0] * patch_size[1] * in_chans,
+                                      bias=True)  # For infoNCE
+        # --------------------------------------------------------------------------
+        self.reconstruction_weight = nn.Parameter(torch.ones(1) * 0.9)
+        self.classification_weight = nn.Parameter(torch.ones(1) * 0.1)
+        # --------------------------------------------------------------------------
+
         # --------------------------------------------------------------------------
 
         self.norm_pix_loss = norm_pix_loss
@@ -221,37 +229,50 @@ class MaskedAutoencoderSignal(nn.Module):
         x = self.decoder_norm(x)
 
         # predictor projection
-        x = self.decoder_pred(x)
+        x_mse = self.decoder_pred(x)
+        x_infoNCE = self.decoder_classification(x)
 
         # remove cls token
-        x = x[:, 1:, :]
+        x_mse = x_mse[:, 1:, :]
+        x_infoNCE = x_infoNCE[:, 1:, :]
 
-        return x
+        return x_mse, x_infoNCE
 
-    def forward_loss(self, imgs, pred, mask):
+    def forward_loss(self, imgs, mse, logits, mask):
         """
         imgs: [N, 1, H, W]
         pred: [N, L, p*p*1]
         mask: [N, L], 0 is keep, 1 is remove,
         """
         target = self.patchify(imgs)
+
+        # mse loss
         if self.norm_pix_loss:
             mean = target.mean(dim=-1, keepdim=True)
             var = target.var(dim=-1, keepdim=True)
             target = (target - mean) / (var + 1.e-6) ** .5
 
-        loss = (pred - target) ** 2
-        loss = loss.mean(dim=-1)  # [N, L], mean loss per patch
+        loss_mse = (mse - target) ** 2
+        loss_mse = loss_mse.mean(dim=-1)  # [N, L], mean loss per patch
 
-        loss = (loss * mask).sum() / mask.sum()  # mean loss on removed patches
+        loss_mse = (loss_mse * mask).sum() / mask.sum()  # mean loss on removed patches
+
+
+        # infoNCE loss
+        target_m_list = target[mask]
+        all_dots = torch.matmul(logits, target_m_list.transpose(-1, -2))
+        log_softmax = torch.log_softmax(all_dots, dim=-1)
+        loss_info_nce = -torch.mean(torch.diagonal(log_softmax, dim1=-2, dim2=-1))
+
+        loss = self.reconstruction_weight * loss_mse + self.classification_weight * loss_info_nce
         return loss
 
     def forward(self, signal, mask_ratio=0.75):
         time_freq = self.preprocess(signal)
         latent, mask, ids_restore = self.forward_encoder(time_freq, mask_ratio)
-        pred = self.forward_decoder(latent, ids_restore)  # [N, L, p*p*1]
-        loss = self.forward_loss(time_freq, pred, mask)
-        return loss, time_freq, pred, mask
+        mse, logits = self.forward_decoder(latent, ids_restore)  # [N, L, p*p*1]
+        loss = self.forward_loss(time_freq, mse, logits, mask)
+        return loss, time_freq, mse, mask
 
 
 def mae_vit_base_patch16_dec512d8b(**kwargs) -> nn.Module:
