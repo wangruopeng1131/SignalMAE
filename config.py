@@ -9,8 +9,8 @@ clip_grad_norm = 2.0
 gradient_accumulation = 1
 fp16 = dict(mode=AMP_TYPE.TORCH)
 
-DATAPATH = r"D:\database\icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0"
-EEGPATH = r"D:\database\chb-mit-scalp-eeg-database-1.0.0"
+DATAPATH = r"/mnt/d/database/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0"
+EEGPATH = r"/mnt/d/database/chb-mit-scalp-eeg-database-1.0.0"
 # DATAPATH = r'/home/wangruopeng/pretrain-data/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0'
 # ==== Model Configuration ====
 #
@@ -59,6 +59,6 @@ WEIGHT_DECAY = 0.5
 NORM_PIX_LOSS = False
 # torch_ddp = dict(find_unused_parameters=True)  # morlet and resample need this
 # resume from checkpoint
-RESUME = True
+RESUME = False
 if RESUME:
-    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-2.pth"
+    RESUME_DIR = Path(__file__) / "output_mae/checkpoint-2.pth"

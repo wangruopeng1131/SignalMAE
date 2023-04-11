@@ -5,7 +5,7 @@ from colossalai.utils import get_dataloader
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
-    train_dataset = PreTrainedDataset(train=True, DATAPATH=r'/home/wangruopeng/pretrain-data/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0')
+    train_dataset = PreTrainedDataset(train=True, DATAPATH=r'D:\database\icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0')
     train_dataloader = get_dataloader(
         dataset=train_dataset,
         shuffle=True,

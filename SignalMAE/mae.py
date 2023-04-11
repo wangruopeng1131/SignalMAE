@@ -75,8 +75,8 @@ class MaskedAutoencoderSignal(nn.Module):
         self.decoder_classification = nn.Linear(decoder_embed_dim, patch_size[0] * patch_size[1] * in_chans,
                                       bias=True)  # For infoNCE
         # --------------------------------------------------------------------------
-        self.reconstruction_weight = nn.Parameter(torch.ones(1) * 0.9)
-        self.classification_weight = nn.Parameter(torch.ones(1) * 0.1)
+        self.reconstruction_weight = nn.Parameter(torch.ones(1) * 0.99)
+        self.classification_weight = nn.Parameter(torch.ones(1) * 0.01)
         # --------------------------------------------------------------------------
 
         # --------------------------------------------------------------------------
@@ -238,7 +238,7 @@ class MaskedAutoencoderSignal(nn.Module):
 
         return x_mse, x_infoNCE
 
-    def forward_loss(self, imgs, mse, logits, mask):
+    def forward_loss(self, imgs, mse, logits, mask, tau=0.1):
         """
         imgs: [N, 1, H, W]
         pred: [N, L, p*p*1]
@@ -259,8 +259,8 @@ class MaskedAutoencoderSignal(nn.Module):
 
 
         # infoNCE loss
-        target_m_list = target[mask]
-        all_dots = torch.matmul(logits, target_m_list.transpose(-1, -2))
+        target_m_list = target * mask.unsqueeze(-1).repeat(1, 1, target.shape[2])
+        all_dots = torch.matmul(logits / tau, target_m_list.transpose(-1, -2))
         log_softmax = torch.log_softmax(all_dots, dim=-1)
         loss_info_nce = -torch.mean(torch.diagonal(log_softmax, dim1=-2, dim2=-1))
 

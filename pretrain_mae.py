@@ -76,7 +76,7 @@ def pretrain_dataloaders(
         dataset=train_dataset,
         shuffle=True,
         batch_size=gpc.config.BATCH_SIZE,
-        num_workers=30,
+        num_workers=5,
         pin_memory=True,
         drop_last=True,
     )
@@ -85,7 +85,7 @@ def pretrain_dataloaders(
         dataset=test_dataset,
         shuffle=True,
         batch_size=gpc.config.BATCH_SIZE,
-        num_workers=30,
+        num_workers=5,
         pin_memory=True,
         drop_last=False,
     )
