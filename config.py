@@ -59,6 +59,6 @@ WEIGHT_DECAY = 0.5
 NORM_PIX_LOSS = False
 # torch_ddp = dict(find_unused_parameters=True)  # morlet and resample need this
 # resume from checkpoint
-RESUME = True
+RESUME = False
 if RESUME:
     RESUME_DIR = Path(__file__).parent.parent / "output_mae/checkpoint-3.pth"
