@@ -73,10 +73,10 @@ class MaskedAutoencoderSignal(nn.Module):
                                       bias=True)  # decoder to patch
 
         self.decoder_classification = nn.Linear(decoder_embed_dim, patch_size[0] * patch_size[1] * in_chans,
-                                      bias=True)  # For infoNCE
+                                                bias=True)  # For infoNCE
         # --------------------------------------------------------------------------
-        self.reconstruction_weight = nn.Parameter(torch.ones(1) * 0.99)
-        self.classification_weight = nn.Parameter(torch.ones(1) * 0.01)
+        self.reconstruction_weight = 0.99
+        self.classification_weight = 0.01
         # --------------------------------------------------------------------------
 
         # --------------------------------------------------------------------------
@@ -256,7 +256,6 @@ class MaskedAutoencoderSignal(nn.Module):
         loss_mse = loss_mse.mean(dim=-1)  # [N, L], mean loss per patch
 
         loss_mse = (loss_mse * mask).sum() / mask.sum()  # mean loss on removed patches
-
 
         # infoNCE loss
         target_m_list = target[mask.to(torch.bool)]
