@@ -9,8 +9,8 @@ clip_grad_norm = 2.0
 gradient_accumulation = 1
 fp16 = dict(mode=AMP_TYPE.TORCH)
 
-DATAPATH = r"~/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0"
-EEGPATH = r"~/chb-mit-scalp-eeg-database-1.0.0"
+DATAPATH = r"/home/wang/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0"
+EEGPATH = r"/home/wang/chb-mit-scalp-eeg-database-1.0.0"
 # DATAPATH = r'/home/wangruopeng/pretrain-data/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0'
 # ==== Model Configuration ====
 #
