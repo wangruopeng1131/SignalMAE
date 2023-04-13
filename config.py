@@ -10,7 +10,7 @@ gradient_accumulation = 1
 fp16 = dict(mode=AMP_TYPE.TORCH)
 
 DATAPATH = Path(__file__).parent.parent / "icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0"
-EEGPATH = Path(__file__).parent.parent / "/chb-mit-scalp-eeg-database-1.0.0"
+EEGPATH = Path(__file__).parent.parent / "chb-mit-scalp-eeg-database-1.0.0"
 # DATAPATH = r'/home/wangruopeng/pretrain-data/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0'
 # ==== Model Configuration ====
 #
