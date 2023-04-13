@@ -162,14 +162,22 @@ def main(args):
     for epoch in range(start_epoch, config.NUM_EPOCHS):
 
         engine.train()
-        # TODO: This part could be more "colossal-native", like construct a correct `engine.criterion`.
-        loss = 0
-        for idx, sig in enumerate(tqdm(train_dataloader, desc="epoch {} | {:.6f}".format(epoch, loss))):
+        batch_length = int(length / config.BATCH_SIZE)
+        pbar = tqdm(range(batch_length),
+                    total=batch_length,
+                    leave=True,
+                    ncols=100,
+                    unit="个",
+                    unit_scale=False,
+                    colour="red")
+        pbar.set_description(f"epoch {epoch}")
+        for idx, sig in enumerate(train_dataloader):
             # we use a per iteration (instead of per epoch) lr scheduler
             sig = sig.cuda()
 
             engine.zero_grad()
             loss, time_freq, pred, mask = engine.model(sig, mask_ratio=config.MASK_RATIO)
+            pbar.set_postfix({"loss": loss})
 
             # add loss into tensorboard
             writer.add_scalar(tag='loss/train', scalar_value=loss, global_step=epoch * length + idx)
