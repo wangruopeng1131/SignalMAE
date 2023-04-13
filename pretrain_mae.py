@@ -16,7 +16,7 @@ from colossalai.context import Config
 from colossalai.core import global_context as gpc
 from colossalai.logging import get_dist_logger
 from colossalai.nn.lr_scheduler import CosineAnnealingLR
-from colossalai.utils import get_dataloader
+from dataIO.data_parallel_sampler import get_dataloader
 from colossalai.utils.checkpointing import load_checkpoint, save_checkpoint
 from tqdm import tqdm
 

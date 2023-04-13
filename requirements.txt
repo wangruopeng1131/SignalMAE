@@ -10,3 +10,4 @@ timm
 numpy
 mne
 wfdb
+prefetch_generator
