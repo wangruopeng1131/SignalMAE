@@ -177,7 +177,6 @@ def main(args):
 
             engine.zero_grad()
             loss, time_freq, pred, mask = engine.model(sig, mask_ratio=config.MASK_RATIO)
-            pbar.set_postfix({"loss": loss})
 
             # add loss into tensorboard
             writer.add_scalar(tag='loss/train', scalar_value=loss, global_step=epoch * length + idx)
@@ -185,6 +184,7 @@ def main(args):
             engine.backward(loss)
             engine.step()
             lr_scheduler.step()
+            pbar.set_postfix({"loss": loss.cpu().numpy()})
 
             if idx % 100 == 0:
                 pred = m.unpatchify(pred)
