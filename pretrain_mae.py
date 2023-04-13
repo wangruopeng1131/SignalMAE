@@ -62,8 +62,6 @@ def pretrain_dataloaders(
     if VERBOSE:
         LOGGER.info(f"ECG_DATA_PATH: {ecg_data_path}")
         LOGGER.info(f"EEG_DATA_PATH: {eeg_data_path}")
-    # train_dataset = _load_imgfolder(datapath / "train", transform_train)
-    # test_dataset = _load_imgfolder(datapath / "val", transform_val)
 
     train_dataset = PreTrainedDataset(train=True, DATAPATH=ecg_data_path, EEGPATH=eeg_data_path)
 
@@ -90,7 +88,7 @@ def pretrain_dataloaders(
         drop_last=False,
     )
 
-    return train_dataloader, test_dataloader
+    return train_dataloader, test_dataloader, len(train_dataset)
 
 
 def init_global_states(config: Config):
@@ -103,7 +101,7 @@ def init_engine(config: Config):
     _model = model(config.NORM_PIX_LOSS)
     _optimizer = optimizer(_model, config.LEARNING_RATE, config.WEIGHT_DECAY)
     _criterion = criterion()
-    train_dataloader, test_dataloader = pretrain_dataloaders(
+    train_dataloader, test_dataloader, length = pretrain_dataloaders(
         config.DATAPATH, config.EEGPATH
     )
     engine, train_dataloader, test_dataloader, _ = colossalai.initialize(
@@ -113,7 +111,7 @@ def init_engine(config: Config):
         train_dataloader,
         test_dataloader,
     )
-    return engine, train_dataloader, test_dataloader, _model
+    return engine, train_dataloader, test_dataloader, _model, length
 
 
 def scale_loss(engine, loss, loss_scaler, data_iter_step, config):
@@ -142,7 +140,7 @@ def main(args):
     init_global_states(config)
     LOGGER.info("START")
     LOGGER.info("--------------------------------------------------------------------------")
-    engine, train_dataloader, _, m = init_engine(config)
+    engine, train_dataloader, _, m, length = init_engine(config)
     lr_scheduler = CosineAnnealingLR(engine.optimizer, total_steps=config.NUM_EPOCHS)
 
     start_epoch = 0
@@ -165,7 +163,8 @@ def main(args):
 
         engine.train()
         # TODO: This part could be more "colossal-native", like construct a correct `engine.criterion`.
-        for idx, sig in enumerate(tqdm(train_dataloader, desc=f"epoch {epoch}")):
+        loss = 0
+        for idx, sig in enumerate(tqdm(train_dataloader, desc="epoch {} | {:.6f}".format(epoch, loss))):
             # we use a per iteration (instead of per epoch) lr scheduler
             sig = sig.cuda()
 
@@ -173,7 +172,7 @@ def main(args):
             loss, time_freq, pred, mask = engine.model(sig, mask_ratio=config.MASK_RATIO)
 
             # add loss into tensorboard
-            writer.add_scalar(tag='loss/train', scalar_value=loss, global_step=epoch * idx + idx)
+            writer.add_scalar(tag='loss/train', scalar_value=loss, global_step=epoch * length + idx)
 
             engine.backward(loss)
             engine.step()
