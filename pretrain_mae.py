@@ -163,28 +163,27 @@ def main(args):
 
         engine.train()
         batch_length = int(length / config.BATCH_SIZE)
-        pbar = tqdm(range(batch_length),
+        pbar = tqdm(train_dataloader,
                     total=batch_length,
                     leave=True,
                     desc=f"epoch {epoch}",
                     unit_scale=False,
                     colour="red")
 
-        for idx, sig in enumerate(train_dataloader):
+        for idx, sig in enumerate(pbar):
             # we use a per iteration (instead of per epoch) lr scheduler
             sig = sig.cuda()
-
             engine.zero_grad()
             loss, time_freq, pred, mask = engine.model(sig, mask_ratio=config.MASK_RATIO)
 
             # add loss into tensorboard
-            writer.add_scalar(tag='loss/train', scalar_value=loss, global_step=epoch * length + idx)
+            writer.add_scalar(tag='loss/train', scalar_value=loss, global_step=epoch * batch_length + idx)
 
             engine.backward(loss)
             engine.step()
             lr_scheduler.step()
-            pbar.set_description(f"{idx}")
-            pbar.set_postfix({"loss": loss.cpu().numpy()})
+
+            pbar.set_postfix({"loss": loss.detech().cpu().numpy()})
 
             if idx % 100 == 0:
                 pred = m.unpatchify(pred)
