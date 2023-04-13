@@ -37,7 +37,7 @@ WARMUP_EPOCHS = 1 if NUM_EPOCHS > 1 else 0
 CHECKPOINT_INTERVAL = 1
 
 # Batch size per GPU (effective batch size is batch_size * accum_iter * # gpus
-BATCH_SIZE = 16
+BATCH_SIZE = 24
 
 # Place to save pretrained model
 OUTPUT_DIR = Path(__file__).parent.parent / "output_mae"
