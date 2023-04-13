@@ -183,7 +183,7 @@ def main(args):
             engine.step()
             lr_scheduler.step()
 
-            pbar.set_postfix({"loss": loss.detech().cpu().numpy()})
+            pbar.set_postfix({"loss": loss.detach().cpu().numpy()})
 
             if idx % 100 == 0:
                 pred = m.unpatchify(pred)
