@@ -166,10 +166,9 @@ def main(args):
         pbar = tqdm(range(batch_length),
                     total=batch_length,
                     leave=True,
-                    ncols=100,
-                    unit="个",
                     unit_scale=False,
                     colour="red")
+
         pbar.set_description(f"epoch {epoch}")
         for idx, sig in enumerate(train_dataloader):
             # we use a per iteration (instead of per epoch) lr scheduler
@@ -184,6 +183,7 @@ def main(args):
             engine.backward(loss)
             engine.step()
             lr_scheduler.step()
+            pbar.set_description(f"idx")
             pbar.set_postfix({"loss": loss.cpu().numpy()})
 
             if idx % 100 == 0:
