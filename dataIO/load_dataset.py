@@ -14,8 +14,8 @@ mne.utils.use_log_level('error')
 from .utlis import get_path, get_eeg_path
 
 ecg_resample = Resample(250, 256)
-eeg_transform = transforms.RandomCrop(size=(1, 256 * 30))  # 256采样率 * 30S
-ecg_transform = transforms.RandomCrop(size=(1, 250 * 30))  # 250采样率 * 30S
+eeg_transform = transforms.RandomCrop(size=(1, 256 * 10))  # 256采样率 * 30S
+ecg_transform = transforms.RandomCrop(size=(1, 250 * 10))  # 250采样率 * 30S
 
 np.random.seed(1024)
 
