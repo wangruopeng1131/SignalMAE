@@ -72,8 +72,8 @@ class MaskedAutoencoderSignal(nn.Module):
         self.decoder_pred = nn.Linear(decoder_embed_dim, patch_size[0] * patch_size[1] * in_chans,
                                       bias=True)  # decoder to patch
 
-        self.decoder_classification = nn.Linear(decoder_embed_dim, patch_size[0] * patch_size[1] * in_chans,
-                                                bias=True)  # For infoNCE
+        # self.decoder_classification = nn.Linear(decoder_embed_dim, patch_size[0] * patch_size[1] * in_chans,
+        #                                         bias=True)  # For infoNCE
         # --------------------------------------------------------------------------
         self.reconstruction_weight = 1
         self.classification_weight = 0
