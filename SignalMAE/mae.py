@@ -230,15 +230,15 @@ class MaskedAutoencoderSignal(nn.Module):
 
         # predictor projection
         x_mse = self.decoder_pred(x)
-        x_infoNCE = self.decoder_classification(x)
+        # x_infoNCE = self.decoder_classification(x)
 
         # remove cls token
         x_mse = x_mse[:, 1:, :]
-        x_infoNCE = x_infoNCE[:, 1:, :]
+        # x_infoNCE = x_infoNCE[:, 1:, :]
 
-        return x_mse, x_infoNCE
+        return x_mse
 
-    def forward_loss(self, imgs, mse, logits, mask, tau=0.1):
+    def forward_loss(self, imgs, mse, mask, tau=0.1):
         """
         imgs: [N, 1, H, W]
         pred: [N, L, p*p*1]
@@ -270,8 +270,8 @@ class MaskedAutoencoderSignal(nn.Module):
     def forward(self, signal, mask_ratio=0.75):
         time_freq = self.preprocess(signal)
         latent, mask, ids_restore = self.forward_encoder(time_freq, mask_ratio)
-        mse, logits = self.forward_decoder(latent, ids_restore)  # [N, L, p*p*1]
-        loss = self.forward_loss(time_freq, mse, logits, mask)
+        mse = self.forward_decoder(latent, ids_restore)  # [N, L, p*p*1]
+        loss = self.forward_loss(time_freq, mse, mask)
         return loss, time_freq, mse, mask
 
 
