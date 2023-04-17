@@ -154,7 +154,7 @@ def main(args):
             f"Resume from checkpoint {config.RESUME_DIR}, start epoch {start_epoch}"
         )
 
-    times = np.linspace(0, 30, 7680)  # 注意修改
+    times = np.linspace(0, 10, 2560)  # 注意修改
     freqs = m.morlet.freqs
     writer = SummaryWriter()
     LOGGER.info(f"Start pre-training for {config.NUM_EPOCHS} epochs")
