@@ -258,14 +258,14 @@ class MaskedAutoencoderSignal(nn.Module):
         loss_mse = (loss_mse * mask).sum() / mask.sum()  # mean loss on removed patches
 
         # infoNCE loss
-        target_m_list = target[mask.to(torch.bool)]
-        logits_masked = logits[mask.to(torch.bool)]
-        all_dots = torch.matmul(logits_masked / tau, target_m_list.transpose(-1, -2))
-        log_softmax = torch.log_softmax(all_dots, dim=-1)
-        loss_info_nce = -torch.mean(torch.diagonal(log_softmax, dim1=-2, dim2=-1))
+        # target_m_list = target[mask.to(torch.bool)]
+        # logits_masked = logits[mask.to(torch.bool)]
+        # all_dots = torch.matmul(logits_masked / tau, target_m_list.transpose(-1, -2))
+        # log_softmax = torch.log_softmax(all_dots, dim=-1)
+        # loss_info_nce = -torch.mean(torch.diagonal(log_softmax, dim1=-2, dim2=-1))
 
-        loss = self.reconstruction_weight * loss_mse + self.classification_weight * loss_info_nce
-        return loss
+        # loss = self.reconstruction_weight * loss_mse + self.classification_weight * loss_info_nce
+        return loss_mse
 
     def forward(self, signal, mask_ratio=0.75):
         time_freq = self.preprocess(signal)
