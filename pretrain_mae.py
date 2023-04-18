@@ -20,7 +20,7 @@ from dataIO.data_parallel_sampler import get_dataloader
 from colossalai.utils.checkpointing import load_checkpoint, save_checkpoint
 from tqdm import tqdm
 
-from SignalMAE.mae import mae_vit_base_patch25
+from SignalMAE.mae import mae_vit_base_patch25, mae_vit_large_patch25
 from dataIO.load_dataset import PreTrainedDataset
 
 matplotlib.use('Agg')
@@ -34,6 +34,7 @@ DEBUG = False
 
 def model(norm_pix_loss):
     m = mae_vit_base_patch25(norm_pix_loss=norm_pix_loss)
+    # m = mae_vit_large_patch25(norm_pix_loss=norm_pix_loss)
     if VERBOSE:
         LOGGER.info("Use model vit_large_patch16")
     return m

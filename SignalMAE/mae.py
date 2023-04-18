@@ -284,8 +284,8 @@ def mae_vit_base_patch16_dec512d8b(**kwargs) -> nn.Module:
 
 
 def mae_vit_large_patch16_dec512d8b(**kwargs) -> nn.Module:
-    model = MaskedAutoencoderSignal(wavelets_width=np.linspace(1, 26, 64), img_size=(64, 1280),
-                                    patch_size=(16, 16), embed_dim=1024, depth=24, num_heads=16,
+    model = MaskedAutoencoderSignal(wavelets_width=np.linspace(1, 32, 64), img_size=(64, 2560),
+                                    patch_size=(16, 32), embed_dim=1024, depth=24, num_heads=16,
                                     decoder_embed_dim=512, decoder_depth=8, decoder_num_heads=16,
                                     mlp_ratio=4, norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)
     return model

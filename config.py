@@ -40,25 +40,25 @@ CHECKPOINT_INTERVAL = 1
 BATCH_SIZE = 16
 
 # Place to save pretrained model
-OUTPUT_DIR = Path(__file__).parent.parent / "output_mae"
+OUTPUT_DIR = Path(__file__).parent.parent / "output_mae_base"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Masking ratio (percentage of removed patches).
 MASK_RATIO = 0.75
 
 # learning rate (absolute lr)
-LEARNING_RATE = 0.002
+LEARNING_RATE = 1.5e-4
 # lower lr bound for cyclic schedulers that hit 0
 MINIMUM_LEARNING_RATE = 0.0001
 # base learning rate: absolute_lr = base_lr * total_batch_size / 256
 _BASE_LEARNING_RATE = 0.002
 
-WEIGHT_DECAY = 0.5
+WEIGHT_DECAY = 0.05
 
 # Use (per-patch) normalized pixels as targets for computing loss
 NORM_PIX_LOSS = False
 # torch_ddp = dict(find_unused_parameters=True)  # morlet and resample need this
 # resume from checkpoint
-RESUME = True
+RESUME = False
 if RESUME:
     RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-20.pth"
