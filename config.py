@@ -29,9 +29,9 @@ EEGPATH = Path(__file__).parent.parent / "chb-mit-scalp-eeg-database-1.0.0"
 VERBOSE = False
 DEBUG = False
 
-NUM_EPOCHS = 20
+NUM_EPOCHS = 40
 # epochs to warmup LR
-WARMUP_EPOCHS = 1 if NUM_EPOCHS > 1 else 0
+WARMUP_EPOCHS = 20 if NUM_EPOCHS > 1 else 0
 
 # Interval to save a checkpoint
 CHECKPOINT_INTERVAL = 1
@@ -47,11 +47,11 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 MASK_RATIO = 0.75
 
 # learning rate (absolute lr)
-LEARNING_RATE = 0.0002
+LEARNING_RATE = 0.002
 # lower lr bound for cyclic schedulers that hit 0
-MINIMUM_LEARNING_RATE = 0
+MINIMUM_LEARNING_RATE = 0.00001
 # base learning rate: absolute_lr = base_lr * total_batch_size / 256
-_BASE_LEARNING_RATE = 0.0002
+_BASE_LEARNING_RATE = 0.002
 
 WEIGHT_DECAY = 0.5
 
