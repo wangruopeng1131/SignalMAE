@@ -40,7 +40,7 @@ CHECKPOINT_INTERVAL = 1
 BATCH_SIZE = 16
 
 #  SummaryWriter dir
-SummaryWriter_DIR = Path(__file__) / "run/Apr18_20-47-26_DESKTOP-6B8T1OU"
+SummaryWriter_DIR = Path(__file__).parent / "runs/Apr18_20-47-26_DESKTOP-6B8T1OU"
 
 # Place to save pretrained model
 OUTPUT_DIR = Path(__file__).parent.parent / "output_mae_base"
