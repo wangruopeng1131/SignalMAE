@@ -39,6 +39,9 @@ CHECKPOINT_INTERVAL = 1
 # Batch size per GPU (effective batch size is batch_size * accum_iter * # gpus
 BATCH_SIZE = 16
 
+#  SummaryWriter dir
+SummaryWriter_DIR = Path(__file__) / "run/Apr18_20-47-26_DESKTOP-6B8T1OU"
+
 # Place to save pretrained model
 OUTPUT_DIR = Path(__file__).parent.parent / "output_mae_base"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

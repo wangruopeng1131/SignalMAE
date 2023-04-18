@@ -157,7 +157,7 @@ def main(args):
 
     times = np.linspace(0, 10, 2560)  # 注意修改
     freqs = m.morlet.freqs
-    writer = SummaryWriter()
+    writer = SummaryWriter(log_dir=config.SummaryWriter_DIR)
     LOGGER.info(f"Start pre-training for {config.NUM_EPOCHS} epochs")
     start_time = time.time()
     for epoch in range(start_epoch, config.NUM_EPOCHS):
