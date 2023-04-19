@@ -64,4 +64,4 @@ NORM_PIX_LOSS = False
 # resume from checkpoint
 RESUME = True
 if RESUME:
-    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-9.pth"
+    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-21.pth"
