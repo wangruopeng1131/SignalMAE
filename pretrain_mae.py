@@ -201,7 +201,7 @@ def main(args):
                 # MAE reconstruction pasted with visible patches
                 im_paste = time_freq * (1 - mask) + pred * mask
 
-                fig, axes = plt.subplots(5, 1, figsize=(20, 24))
+                fig, axes = plt.subplots(5, 1, figsize=(25, 24))
                 tf = tf[0, 0, ...].detach().cpu().numpy()
                 time_freq = time_freq[0, 0, ...].detach().cpu().numpy()
                 im_masked = im_masked[0, 0, ...].detach().cpu().numpy()
