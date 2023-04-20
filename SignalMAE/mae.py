@@ -22,6 +22,7 @@ from timm.models.vision_transformer import Block
 from .tools.pos_embed import get_2d_sincos_pos_embed
 from .patch_embedding import PatchEmbed
 from .wavelets import Ricker, Morlet
+from .conv import IIRFilter, ConvHeader
 
 
 class MaskedAutoencoderSignal(nn.Module):
@@ -38,6 +39,8 @@ class MaskedAutoencoderSignal(nn.Module):
         # --------------------------------------------------------------------------
         signal_input = len(wavelets_width)
         self.morlet = Morlet(freqs=wavelets_width)
+        self.iir = IIRFilter(fs=256, l_freq=0.1, h_freq=100)
+        self.conv = ConvHeader(channels=signal_input, fs=256)
         # self.conv = nn.Conv1d(in_channels=signal_input, out_channels=signal_input, kernel_size=3, stride=2, padding=1)
         # self.resample = {'ecg': Resample(250, 256), 'eeg': Resample(256, 256)}
         # --------------------------------------------------------------------------
@@ -181,10 +184,12 @@ class MaskedAutoencoderSignal(nn.Module):
 
     def preprocess(self, x):
         # x = self.resample[signal_type](x)
-        x = self.morlet(x)  # batch, 1, 15 * 250 ->  batch, wavelet channels, 15 * 250
+        x = self.iir(x)
+        x = self.conv(x)
+        # x = self.morlet(x)  # batch, 1, 15 * 250 ->  batch, wavelet channels, 15 * 250
         # x = self.conv(x)  # batch, wavelet channels, 15 * 250 -> batch, wavelet channels, 15 * 125
-        B, t, f = x.shape
-        x = F.layer_norm(x, [t, f])  # normalize wavelet channels, 15 * 250
+        # B, t, f = x.shape
+        # x = F.layer_norm(x, [t, f])  # normalize wavelet channels, 15 * 250
         return x.unsqueeze(1)  # batch, wavelet channels, 15 * 125 -> batch, 1, wavelet channels, 15 * 125
 
     def forward_encoder(self, x, mask_ratio):

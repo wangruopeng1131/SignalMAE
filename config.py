@@ -40,10 +40,10 @@ CHECKPOINT_INTERVAL = 1
 BATCH_SIZE = 16
 
 #  SummaryWriter dir
-SummaryWriter_DIR = Path(__file__).parent / "runs/Apr18_20-47-26_DESKTOP-6B8T1OU"
+SummaryWriter_DIR = Path(__file__).parent / "runs/base_convheader"
 
 # Place to save pretrained model
-OUTPUT_DIR = Path(__file__).parent.parent / "output_mae_base"
+OUTPUT_DIR = Path(__file__).parent.parent / "output_mae_base_convheader"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Masking ratio (percentage of removed patches).
@@ -62,6 +62,6 @@ WEIGHT_DECAY = 0.05
 NORM_PIX_LOSS = False
 # torch_ddp = dict(find_unused_parameters=True)  # morlet and resample need this
 # resume from checkpoint
-RESUME = True
+RESUME = False
 if RESUME:
     RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-41.pth"
