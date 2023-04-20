@@ -25,7 +25,7 @@ class ConvHeader(nn.Module):
     def __init__(self, channels: int = 64, fs: int = 256):
         super(ConvHeader, self).__init__()
 
-        self.conv1 = nn.Conv1d(1, channels, kernel_size=int(fs / 2) - 1, padding='same')
+        self.conv1 = nn.Conv1d(channels, channels, kernel_size=int(fs / 2) - 1, padding='same')
         self.conv2 = nn.Conv1d(channels, channels, kernel_size=int(fs / 2) - 1, padding='same')
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:

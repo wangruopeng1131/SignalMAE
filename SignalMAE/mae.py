@@ -185,9 +185,8 @@ class MaskedAutoencoderSignal(nn.Module):
     def preprocess(self, x):
         # x = self.resample[signal_type](x)
         x = self.iir(x)
-        x = self.conv(x)
-        # x = self.morlet(x)  # batch, 1, 15 * 250 ->  batch, wavelet channels, 15 * 250
-        # x = self.conv(x)  # batch, wavelet channels, 15 * 250 -> batch, wavelet channels, 15 * 125
+        x = self.morlet(x)  # batch, 1, 15 * 250 ->  batch, wavelet channels, 15 * 250
+        x = self.conv(x)  # batch, wavelet channels, 15 * 250 -> batch, wavelet channels, 15 * 125
         B, t, f = x.shape
         x = F.layer_norm(x, [t, f])  # normalize wavelet channels, 15 * 250
         return x.unsqueeze(1)  # batch, wavelet channels, 15 * 125 -> batch, 1, wavelet channels, 15 * 125
