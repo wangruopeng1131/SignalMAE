@@ -6,7 +6,7 @@ from colossalai.amp import AMP_TYPE
 # ==== Colossal-AI Configuration ====
 
 clip_grad_norm = 2.0
-gradient_accumulation = 2
+gradient_accumulation = 5
 fp16 = dict(mode=AMP_TYPE.TORCH)
 
 DATAPATH = Path(__file__).parent.parent / "icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0"
@@ -64,4 +64,4 @@ NORM_PIX_LOSS = False
 # resume from checkpoint
 RESUME = True
 if RESUME:
-    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-26.pth"
+    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-28.pth"
