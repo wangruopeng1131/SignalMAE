@@ -5,7 +5,7 @@ from colossalai.amp import AMP_TYPE
 
 # ==== Colossal-AI Configuration ====
 
-clip_grad_norm = 2.0
+clip_grad_norm = 1.0
 gradient_accumulation = 5
 fp16 = dict(mode=AMP_TYPE.TORCH)
 
