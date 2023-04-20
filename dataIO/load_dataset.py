@@ -59,7 +59,7 @@ class PreTrainedDataset(Dataset):
     def __getitem__(self, index):
         if self.train:
             file = self.train[index]
-            if 'icentia11k' in file:
+            if 'ecg' in file:
                 data = rdrecord(file).p_signal.reshape(1, -1)
                 data = torch.from_numpy(data).float()
                 data = ecg_transform(data)
