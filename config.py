@@ -29,9 +29,9 @@ EEGPATH = Path(__file__).parent.parent / "chb-mit-scalp-eeg-database-1.0.0"
 VERBOSE = False
 DEBUG = False
 
-NUM_EPOCHS = 40
+NUM_EPOCHS = 80
 # epochs to warmup LR
-WARMUP_EPOCHS = 20 if NUM_EPOCHS > 1 else 0
+WARMUP_EPOCHS = 40 if NUM_EPOCHS > 1 else 0
 
 # Interval to save a checkpoint
 CHECKPOINT_INTERVAL = 1
@@ -64,4 +64,4 @@ NORM_PIX_LOSS = False
 # resume from checkpoint
 RESUME = True
 if RESUME:
-    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-21.pth"
+    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-23.pth"
