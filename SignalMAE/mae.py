@@ -185,10 +185,11 @@ class MaskedAutoencoderSignal(nn.Module):
     def preprocess(self, x):
         # x = self.iir(x)
         x = self.morlet(x)  # batch, 1, 15 * 250 ->  batch, wavelet channels, 15 * 250
+        tf = x
         x = self.conv(x)  # batch, wavelet channels, 15 * 250 -> batch, wavelet channels, 15 * 125
         B, t, f = x.shape
         x = F.layer_norm(x, [t, f])  # normalize wavelet channels, 15 * 250
-        return x.unsqueeze(1)  # batch, wavelet channels, 15 * 125 -> batch, 1, wavelet channels, 15 * 125
+        return x.unsqueeze(1), tf.unsqueeze(1)  # batch, wavelet channels, 15 * 125 -> batch, 1, wavelet channels, 15 * 125
 
     def forward_encoder(self, x, mask_ratio):
         # embed patches
@@ -271,11 +272,11 @@ class MaskedAutoencoderSignal(nn.Module):
         return loss_mse
 
     def forward(self, signal, mask_ratio=0.75):
-        time_freq = self.preprocess(signal)
+        time_freq, tf = self.preprocess(signal)
         latent, mask, ids_restore = self.forward_encoder(time_freq, mask_ratio)
         mse = self.forward_decoder(latent, ids_restore)  # [N, L, p*p*1]
         loss = self.forward_loss(time_freq, mse, mask)
-        return loss, time_freq, mse, mask
+        return loss, time_freq, mse, mask, tf
 
 
 def mae_vit_base_patch16_dec512d8b(**kwargs) -> nn.Module:

@@ -175,7 +175,7 @@ def main(args):
             # we use a per iteration (instead of per epoch) lr scheduler
             sig = sig.cuda()
             engine.zero_grad()
-            loss, time_freq, pred, mask = engine.model(sig, mask_ratio=config.MASK_RATIO)
+            loss, time_freq, pred, mask, tf = engine.model(sig, mask_ratio=config.MASK_RATIO)
 
             # add loss into tensorboard
             writer.add_scalar(tag='loss/train', scalar_value=loss, global_step=epoch * batch_length + idx)
@@ -201,7 +201,8 @@ def main(args):
                 # MAE reconstruction pasted with visible patches
                 im_paste = time_freq * (1 - mask) + pred * mask
 
-                fig, axes = plt.subplots(4, 1, figsize=(20, 24))
+                fig, axes = plt.subplots(5, 1, figsize=(20, 24))
+                tf = tf[0, 0, ...].detach().cpu().numpy()
                 time_freq = time_freq[0, 0, ...].detach().cpu().numpy()
                 im_masked = im_masked[0, 0, ...].detach().cpu().numpy()
                 pred = pred[0, 0, ...].detach().cpu().numpy()
@@ -210,7 +211,8 @@ def main(args):
                 axes[1].pcolormesh(times, freqs, im_masked, cmap='PRGn', vmax=im_masked.max(), vmin=-im_masked.max())
                 axes[2].pcolormesh(times, freqs, pred, cmap='PRGn', vmax=pred.max(), vmin=-pred.max())
                 axes[3].pcolormesh(times, freqs, im_paste, cmap='PRGn', vmax=im_paste.max(), vmin=-im_paste.max())
-                writer.add_figure(tag=f'epoch{epoch} | step {idx} | raw | masked | reconstruct | reconstruct + visible',
+                axes[4].pcolormesh(times, freqs, tf, cmap='PRGn', vmax=tf.max(), vmin=-tf.max())
+                writer.add_figure(tag=f'epoch{epoch} | step {idx} | raw | masked | reconstruct | reconstruct + visible | wavelets',
                                   figure=fig, global_step=epoch * idx + idx)
 
             if DEBUG:
