@@ -73,7 +73,7 @@ class PreTrainedDataset(Dataset):
                 data = eeg_transform(data)
         else:
             file = self.test[index]
-            if 'icentia11k' in file:
+            if 'ecg' in file:
                 data = rdrecord(file).p_signal.reshape(1, -1)
                 data = torch.from_numpy(data).float()
                 data = ecg_transform(data)
