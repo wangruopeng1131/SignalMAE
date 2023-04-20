@@ -46,8 +46,8 @@ class PreTrainedDataset(Dataset):
         self.train = train
         self.ecg_file_path = get_path(DATAPATH)
         np.random.shuffle(self.ecg_file_path)
-        self.ecg_file_path = self.ecg_file_path
-        self.eeg_file_path = get_eeg_path(EEGPATH)
+        self.ecg_file_path = self.ecg_file_path[: int(len(self.ecg_file_path) / 2)]
+        self.eeg_file_path = get_eeg_path(EEGPATH) * 10
 
         self.file_path = self.ecg_file_path + self.eeg_file_path
         np.random.shuffle(self.file_path)

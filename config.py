@@ -9,8 +9,8 @@ clip_grad_norm = 2.0
 gradient_accumulation = 5
 fp16 = dict(mode=AMP_TYPE.TORCH)
 
-DATAPATH = Path(__file__).parent.parent / "icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0"
-EEGPATH = Path(__file__).parent.parent / "chb-mit-scalp-eeg-database-1.0.0"
+DATAPATH = Path(__file__).parent.parent / "ecg_data"
+EEGPATH = Path(__file__).parent.parent / "chb-mit-scalp-eeg"
 # DATAPATH = r'/home/wangruopeng/pretrain-data/icentia11k-single-lead-continuous-raw-electrocardiogram-dataset-1.0'
 # ==== Model Configuration ====
 #
@@ -64,4 +64,4 @@ NORM_PIX_LOSS = False
 # resume from checkpoint
 RESUME = True
 if RESUME:
-    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-28.pth"
+    RESUME_DIR = Path(__file__).parent / "output_mae/checkpoint-41.pth"
