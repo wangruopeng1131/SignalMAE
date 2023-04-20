@@ -10,7 +10,7 @@ from scipy.signal import butter
 class IIRFilter(nn.Module):
     def __init__(self, fs: float = 256, l_freq: float = 0.1, h_freq: float = 100):
         super(IIRFilter, self).__init__()
-        b, a = butter(4, [l_freq, h_freq], fs=fs, btype='bandpass')
+        b, a = butter(3, [l_freq, h_freq], fs=fs, btype='bandpass')
         self.b = torch.from_numpy(b).float()
         self.a = torch.from_numpy(a).float()
 
