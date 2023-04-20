@@ -15,6 +15,9 @@ class IIRFilter(nn.Module):
         self.a = torch.from_numpy(a).float()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if self.b.device != x.device:
+            self.b = self.b.to(x.device)
+            self.a = self.a.to(x.device)
         return filtfilt(x, self.a, self.b, False)
 
 
