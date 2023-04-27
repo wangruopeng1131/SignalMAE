@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib.pyplot as plt
 
 # 绘制心电图
